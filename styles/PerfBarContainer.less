@@ -1,0 +1,62 @@
+@import "ui-variables";
+@import "innpv-animation";
+
+.innpv-perfbarcontainer-wrap {
+  display: flex;
+  height: 100%;
+}
+
+.innpv-perfbarcontainer {
+  height: 100%;
+  width: 25px;
+  background-color: @input-background-color;
+  overflow: hidden;
+}
+
+.innpv-perfbarcontainer-inner {
+  height: 100%;
+  transition-property: margin-top;
+  transition-duration: @perfbar-duration;
+  transition-timing-function: @perfbar-easing;
+}
+
+.innpv-perfbarcontainer-labelcontainer {
+  height: 100%;
+  width: 10px;
+  margin-left: 5px;
+}
+
+@innpv-perfbar-label-border: 1px solid @text-color-subtle;
+
+.innpv-perfbarcontainer-labelwrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-bottom: @innpv-perfbar-label-border;
+
+  transition-property: height;
+  transition-duration: @perfbar-label-duration;
+  transition-timing-function: @perfbar-label-easing;
+
+  &:first-child {
+    border-top: @innpv-perfbar-label-border;
+  }
+}
+
+.innpv-perfbarcontainer-label {
+  transform: rotate(270deg);
+  color: @text-color-subtle;
+  font-size: 0.8em;
+
+  transition-property: color;
+  transition-duration: @perfbar-label-duration;
+  transition-timing-function: @perfbar-label-easing;
+}
+
+.innpv-perfbarcontainer-clickable {
+  cursor: pointer;
+}
+
+.innpv-perfbarcontainer-clickable:hover .innpv-perfbarcontainer-label {
+  color: @text-color;
+}

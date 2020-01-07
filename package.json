@@ -1,0 +1,32 @@
+{
+  "name": "skyline",
+  "main": "./lib/skyline",
+  "version": "0.1.0",
+  "description": "Interactive in-editor performance profiling, visualization, and debugging for PyTorch neural networks.",
+  "keywords": [
+    "neural networks",
+    "pytorch",
+    "interactive",
+    "performance",
+    "visualization",
+    "profiler",
+    "debugger"
+  ],
+  "activationCommands": {
+    "atom-workspace": [
+      "skyline:open",
+      "skyline:close"
+    ]
+  },
+  "repository": "https://github.com/geoffxy/skyline-atom",
+  "license": " Apache-2.0",
+  "engines": {
+    "atom": ">=1.0.0 <2.0.0"
+  },
+  "dependencies": {
+    "google-protobuf": "^3.7.0-rc.2",
+    "react": "^16.8.3",
+    "react-dom": "^16.8.3"
+  },
+  "devDependencies": {}
+}
