@@ -171,6 +171,13 @@ def skyline_iteration_provider(model):
     return iteration
 ```
 
+One important thing to highlight is our use of a wrapper `ModelWithLoss`
+module. Since Skyline needs to be able to call `.backwards()` directly on the
+output tensor of our model, we need to use this wrapper module to compute and
+return the loss of our model's output with respect to the targets (i.e. the
+labels). We also include the targets as inputs to our wrapped module and in our
+input provider.
+
 You can place these *provider* functions either in a new file or directly in
 `model.py`. Whichever file contains the providers will be your project's *entry
 point file*. In this example, suppose that we defined the providers in a
