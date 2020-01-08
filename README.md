@@ -9,16 +9,8 @@ networks.
 between versions. See [Versioning](#versioning) for more details.
 
 - [Installing Skyline](#installing-skyline)
-  - [Requirements](#requirements)
-  - [Installation](#installation)
 - [Getting Started](#getting-started)
-  - [Projects](#projects)
-  - [Entry Point](#entry-point)
-  - [Example](#example)
 - [Providers in Detail](#providers-in-detail)
-  - [Model Provider](#model-provider)
-  - [Input Provider](#input-provider)
-  - [Iteration Provider](#iteration-provider)
 - [Versioning](#versioning)
 - [Authors](#authors)
 
@@ -110,49 +102,112 @@ through an example.
 
 ### Example
 
+Suppose that your project code is kept under a `my_project` directory:
+
 ```
-my-project
+my_project
 ├── __init__.py
-└── main.py
+└── model.py
 ```
 
+and your model is defined in `model.py`:
+
 ```python
-import torch
 import torch.nn as nn
 
 
 class Model(nn.Module):
     def __init__(self):
         super().__init__()
-        self.conv = nn.Conv2d()
+        self.conv = nn.Conv2d(in_channels=3, out_channels=6, kernel_size=3)
+        self.linear = nn.Linear(in_features=387096, out_features=10)
 
     def forward(self, input):
-        return self.conv(input)
+        out = self.conv(input)
+        return self.linear(out.view(-1, 387096))
 ```
 
+One way to write the *entry point* file would be:
+
 ```python
+import torch
+import torch.nn as nn
+
+from my_project.model import Model
+
+
+class ModelWithLoss(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.model = Model()
+        self.loss_fn = nn.CrossEntropyLoss()
+
+    def forward(self, input, target):
+        output = self.model(input)
+        return self.loss_fn(output, target)
+
+
+def skyline_model_provider():
+    # Return a GPU-based instance of our model (that returns a loss)
+    return ModelWithLoss().cuda()
+
+
 def skyline_input_provider(batch_size=32):
-    return (torch.randn((batch_size, 3, 256, 256)).cuda(),)
+    # Return GPU-based inputs for our model
+    return (
+      torch.randn((batch_size, 3, 256, 256)).cuda(),
+      torch.randint(low=0, high=9, size=(batch_size,)).cuda(),
+    )
+
+
+def skyline_iteration_provider(model):
+    # Return a function that executes one training iteration
+    optimizer = torch.optim.SGD(model.parameters(), lr=1e-3)
+    def iteration(*inputs):
+        optimizer.zero_grad()
+        out = model(*inputs)
+        out.backward()
+        optimizer.step()
+    return iteration
+```
+
+You can place these *provider* functions either in a new file or directly in
+`model.py`. Whichever file contains the providers will be your project's *entry
+point file*. In this example, suppose that we defined the providers in a
+separate file called `entry_point.py` inside `my_project`.
+
+Suppose that `my_project` is in your home directory. To launch Skyline you
+would run (in your shell):
+
+```
+cd ~/my_project
+skyline interactive entry_point.py
 ```
 
 
-### Providers in Detail
+## Providers in Detail
 
-#### Model Provider
+### Model Provider
 
 ```python
-skyline_model_provider() -> torch.nn.Module
+def skyline_model_provider() -> torch.nn.Module:
+    pass
 ```
 
 The model provider must take no arguments and return an instance of your model
 (a `torch.nn.Module`) that is on the GPU (i.e. you need to call `.cuda()` on
 the module before returning it).
 
+**Important:** Your model must return a tensor on which `.backward()` can be
+called. Generally this means that the `torch.nn.Module` you return must compute
+the loss with respect to the inputs passed into the model.
 
-#### Input Provider
+
+### Input Provider
 
 ```python
-skyline_input_provider(batch_size: int = 32) -> Tuple
+def skyline_input_provider(batch_size: int = 32) -> Tuple:
+    pass
 ```
 
 The input provider must take a single `batch_size` argument that has a default
@@ -163,10 +218,11 @@ iterable must be on the GPU (i.e. you need to call `.cuda()` on them before
 returning them).
 
 
-#### Iteration Provider
+### Iteration Provider
 
 ```python
-skyline_iteration_provider(model: torch.nn.Module) -> Callable
+def skyline_iteration_provider(model: torch.nn.Module) -> Callable:
+    pass
 ```
 
 The iteration provider must take a single `model` argument, which will be an
@@ -176,7 +232,7 @@ that, when invoked, runs a single training iteration.
 
 ## Versioning
 
-Skyline uses semantic versioning. Before the 1.0 release, backwards
+Skyline uses semantic versioning. Before the 1.0.0 release, backwards
 compatibility between minor versions will not be guaranteed.
 
 The Skyline command line tool and plugin use *independent* version numbers.
