@@ -4,6 +4,20 @@ Skyline is a tool used with [Atom](https://atom.io) to profile, visualize, and
 debug the training performance of [PyTorch](https://pytorch.org) neural
 networks.
 
+**Note:** Skyline is still under active development and should be considered an
+"alpha" product. Its usage and system requirements are subject to change
+between versions. See [Versioning](#versioning) for more details.
+
+- [Installing Skyline](#installing-skyline)
+  - [Requirements](#requirements)
+  - [Installation](#installation)
+- [Getting Started](#getting-started)
+  - [Projects](#projects)
+  - [Entry Point](#entry-point)
+  - [Example](#example)
+- [Versioning](#versioning)
+- [Authors](#authors)
+
 -------------------------------------------------------------------------------
 
 ## Installing Skyline
@@ -17,8 +31,8 @@ To run Skyline, you need:
 - PyTorch 1.1.0+
 - Python 3.6+
 
-Skyline is only supported on Ubuntu 18.04. It should also work on other Ubuntu
-versions that can run Atom and that have Python 3.6+.
+Skyline is currently only supported on Ubuntu 18.04. It should also work on
+other Ubuntu versions that can run Atom and that have Python 3.6+.
 
 
 ### Installation
@@ -56,8 +70,6 @@ To shutdown Skyline, execute the `Skyline:Close` command in the command
 palette. You can shutdown the profiling session on the command line by hitting
 Ctrl-C in your terminal.
 
-
-## Details
 
 ### Projects
 
