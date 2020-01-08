@@ -15,6 +15,10 @@ between versions. See [Versioning](#versioning) for more details.
   - [Projects](#projects)
   - [Entry Point](#entry-point)
   - [Example](#example)
+- [Providers in Detail](#providers-in-detail)
+  - [Model Provider](#model-provider)
+  - [Input Provider](#input-provider)
+  - [Iteration Provider](#iteration-provider)
 - [Versioning](#versioning)
 - [Authors](#authors)
 
@@ -67,17 +71,41 @@ Then, open up Atom, execute the `Skyline:Open` command in the command palette
 (Ctrl-Shift-P), and hit the "Connect" button that appears on the right.
 
 To shutdown Skyline, execute the `Skyline:Close` command in the command
-palette. You can shutdown the profiling session on the command line by hitting
-Ctrl-C in your terminal.
+palette. You can shutdown the interactive profiling session on the command line
+by hitting Ctrl-C in your terminal.
+
+**Important:** To analyze your model, Skyline will actually run your code. This
+means that when you invoke `skyline interactive`, you need to make sure that
+your shell has the proper environments activated (if needed). For example if
+you use `virtualenv` to manage your model's dependencies, you need to activate
+your `virtualenv` before starting Skyline.
 
 
 ### Projects
 
-Skyline assumes that your code is stored under one top level directory. Skyline
-calls this top level directory your project's *root directory*.
+To use Skyline, all of the code that you want to profile interactively must be
+stored under one common directory. Generally, this just means you need to keep
+your own source code under one common directory. Skyline considers all the
+files inside this common directory to be part of a *project*, and calls this
+common directory your project's *root directory*.
+
+When starting a Skyline interactive profiling session, you must invoke `skyline
+interactive <entry point>` inside your project's *root directory*.
 
 
 ### Entry Point
+
+Skyline uses an *entry point* file to learn how to create and train your model.
+An entry point file is a regular Python file that contains three top-level
+functions:
+
+- `skyline_model_provider`
+- `skyline_input_provider`
+- `skyline_iteration_provider`
+
+These three functions are called *providers* and must be defined with specific
+signatures. The easiest way to understand how to write the providers is to read
+through an example.
 
 
 ### Example
@@ -104,8 +132,46 @@ class Model(nn.Module):
 
 ```python
 def skyline_input_provider(batch_size=32):
-    return (torch.randn((batch_size, 3, 256, 256)),)
+    return (torch.randn((batch_size, 3, 256, 256)).cuda(),)
 ```
+
+
+### Providers in Detail
+
+#### Model Provider
+
+```python
+skyline_model_provider() -> torch.nn.Module
+```
+
+The model provider must take no arguments and return an instance of your model
+(a `torch.nn.Module`) that is on the GPU (i.e. you need to call `.cuda()` on
+the module before returning it).
+
+
+#### Input Provider
+
+```python
+skyline_input_provider(batch_size: int = 32) -> Tuple
+```
+
+The input provider must take a single `batch_size` argument that has a default
+value (the batch size you want to profile with). It must return an iterable
+(does not *have* to be a `tuple`) that contains the arguments that you would
+normally pass to your model's `forward` method. Any `Tensor`s in the returned
+iterable must be on the GPU (i.e. you need to call `.cuda()` on them before
+returning them).
+
+
+#### Iteration Provider
+
+```python
+skyline_iteration_provider(model: torch.nn.Module) -> Callable
+```
+
+The iteration provider must take a single `model` argument, which will be an
+instance of your model. This provider must return a callable (e.g., a function)
+that, when invoked, runs a single training iteration.
 
 
 ## Versioning
