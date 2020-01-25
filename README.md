@@ -72,6 +72,11 @@ your shell has the proper environments activated (if needed). For example if
 you use `virtualenv` to manage your model's dependencies, you need to activate
 your `virtualenv` before starting Skyline.
 
+**Usage Statistics:** Skyline collects usage statistics in order to help us
+make improvements to the tool. If you do not want Skyline to collect usage
+statistics, you can disable this functionality through Skyline's package
+settings in Atom (Atom > Settings/Preferences > Packages > Skyline > Settings).
+
 
 ### Projects
 
