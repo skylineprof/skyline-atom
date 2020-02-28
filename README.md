@@ -1,4 +1,4 @@
-![Skyline](https://github.com/geoffxy/skyline-atom/blob/master/assets/skyline-wordmark.png)
+![Skyline](https://raw.githubusercontent.com/geoffxy/skyline-atom/new-docs/assets/skyline-wordmark.png)
 
 <h1 align="center">Skyline for Atom</h1>
 
