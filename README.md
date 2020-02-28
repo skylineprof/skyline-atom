@@ -1,4 +1,6 @@
-# Skyline for Atom
+![Skyline for Atom](https://raw.githubusercontent.com/geoffxy/skyline-atom/master/assets/skyline-wordmark.png)
+
+-------------------------------------------------------------------------------
 
 Skyline is a tool used with [Atom](https://atom.io) to profile, visualize, and
 debug the training performance of [PyTorch](https://pytorch.org) neural
@@ -59,12 +61,15 @@ directory* and run:
 skyline interactive path/to/entry/point/file
 ```
 
-Then, open up Atom, execute the `Skyline:Open` command in the command palette
+Then, open up Atom, execute the `Skyline:Toggle` command in the command palette
 (Ctrl-Shift-P), and hit the "Connect" button that appears on the right.
 
-To shutdown Skyline, execute the `Skyline:Close` command in the command
-palette. You can shutdown the interactive profiling session on the command line
-by hitting Ctrl-C in your terminal.
+To shutdown Skyline, just execute the `Skyline:Toggle` command again in the
+command palette. You can shutdown the interactive profiling session on the
+command line by hitting Ctrl-C in your terminal.
+
+You can also toggle the Skyline through the Atom menus: Packages > Skyline >
+Show/Hide Skyline.
 
 **Important:** To analyze your model, Skyline will actually run your code. This
 means that when you invoke `skyline interactive`, you need to make sure that
