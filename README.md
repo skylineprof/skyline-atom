@@ -1,6 +1,6 @@
-![Skyline](https://raw.githubusercontent.com/geoffxy/skyline-atom/new-docs/assets/skyline-wordmark.png)
+![Skyline for Atom](https://raw.githubusercontent.com/geoffxy/skyline-atom/new-docs/assets/skyline-wordmark.png)
 
-<h1 align="center">Skyline for Atom</h1>
+-------------------------------------------------------------------------------
 
 Skyline is a tool used with [Atom](https://atom.io) to profile, visualize, and
 debug the training performance of [PyTorch](https://pytorch.org) neural
