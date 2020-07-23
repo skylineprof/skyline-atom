@@ -6,8 +6,8 @@ Skyline is a tool used with [Atom](https://atom.io) to profile, visualize, and
 debug the training performance of [PyTorch](https://pytorch.org) neural
 networks.
 
-**Note:** Skyline is still under active development and should be considered an
-"alpha" product. Its usage and system requirements are subject to change
+**Note:** Skyline is still under active development and should be considered a
+beta product. Its usage and system requirements are subject to change
 between versions. See [Versioning](#versioning) for more details.
 
 More information about Skyline, including its documentation, can be found on
